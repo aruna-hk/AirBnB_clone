@@ -13,3 +13,6 @@ class User(base_model.BaseModel):
 
     def __init__(self, *args, **kwargs):
         super().__init__(args, kwargs)
+
+    def all(self):
+        print("--------")

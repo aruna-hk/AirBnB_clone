@@ -202,5 +202,28 @@ class HBNBCommand(cmd.Cmd):
                 storage.objects = all_objs
                 storage.save() 
 
+    def default(self, line):
+        parts = line.split(".")
+        if (len(parts) > 1):
+            parts.reverse()
+            parts[0] = parts[0][:-2]
+            method = "do_" + parts[0]
+            if hasattr(self, method):
+                methodn = getattr(self, method)
+                lis2 = parts[1:]
+                methodn(" ".join(lis2))
+            else:
+                print("*** Unknown syntax: {}".format(line))
+        else:
+            super().default(line)
+
+    def do_count(self, line):
+        storage.reload()
+        obj = storage.all()
+        count = 0
+        for key in obj:
+            if (key.split(".")[0] == line):
+                count = count + 1
+        print(count)
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
