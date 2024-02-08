@@ -3,6 +3,12 @@
 import cmd
 from models.base_model import BaseModel
 from models import storage
+from models.state import State
+from models.user import User
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 class HBNBCommand(cmd.Cmd):
     """ class cmd processor, inherit cmd module """
@@ -23,12 +29,36 @@ class HBNBCommand(cmd.Cmd):
     def do_creat(self, line):
         """ create object of provided class """
 
-        if (line == "BaseModel"):
+        if (len(line) == 0):
+            print("** class name missing **")
+        elif (line == "BaseModel"):
             newobj = BaseModel()
             print(newobj.id)
             storage.save()
-        elif (len(line) == 0):
-            print("** class name missing **")
+        elif (line == "User"):
+            newuser = User()
+            print(newuser.id)
+            storage.save()
+        elif (line == "State"):
+            newstate = State()
+            print(newstate.id)
+            storage.save()
+        elif (line == "City"):
+            newcity = City()
+            print(newcity.id)
+            storage.save()
+        elif (line == "Place"):
+            newplace = Place()
+            print(newplace.id)
+            storage.save()
+        elif (line == "Amenity"):
+            newA = Amenity()
+            print(newA.id)
+            storage.save()
+        elif (line == "Review"):
+            newRev = Review()
+            print(newRev.id)
+            storage.save()
         else:
             print("** class doesn't exist **")
 

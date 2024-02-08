@@ -11,7 +11,7 @@ class FileStorage:
 
     __file_path = "file.json"
     __objects = {}
-
+    __base = None
 
     @staticmethod
     def file_path(file_path="file.json"):
@@ -31,6 +31,8 @@ class FileStorage:
 
     def save(self):
         """serializes objects to  file"""
+
+        print(self.__objects)
         with open(self.__file_path, "w") as file:
            json.dump(self.__objects, file)
 

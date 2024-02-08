@@ -4,9 +4,7 @@ except Exception as e:
     pass
 try:
     print("importing base model")
-    from .. import base_model
+    from .models import base_model
     print("imported")
 except Exception as e:
     pass
-#from .. import x
-#print(x)
