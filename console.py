@@ -10,11 +10,13 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
+import sys
 
 class HBNBCommand(cmd.Cmd):
     """ class cmd processor, inherit cmd module """
 
     prompt = "(hbnb) "
+
 
     def emptyline(self):
         """does nothing when empty line/ newline characte"""
@@ -34,37 +36,14 @@ class HBNBCommand(cmd.Cmd):
 
         if (len(line) == 0):
             print("** class name missing **")
-        elif (line == "BaseModel"):
-            newobj = BaseModel()
-            print(newobj.id)
-            storage.save()
-        elif (line == "User"):
-            newuser = User()
-            print(newuser.id)
-            storage.save()
-        elif (line == "State"):
-            newstate = State()
-            print(newstate.id)
-            storage.save()
-        elif (line == "City"):
-            newcity = City()
-            print(newcity.id)
-            storage.save()
-        elif (line == "Place"):
-            newplace = Place()
-            print(newplace.id)
-            storage.save()
-        elif (line == "Amenity"):
-            newA = Amenity()
-            print(newA.id)
-            storage.save()
-        elif (line == "Review"):
-            newRev = Review()
-            print(newRev.id)
-            storage.save()
-        else:
-            print("** class doesn't exist **")
-
+        else: 
+            try:
+                x = getattr(sys.modules[__name__], line)
+                newobj = x()
+                print(newobj.id)
+                storage.save()
+            except AttributeError as e:
+                print("** class doesn't exist **")
 
     def do_show(self, line):
         """print created objects bof class  passes as argument """
