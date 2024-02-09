@@ -13,6 +13,8 @@ from models.review import Review
 class HBNBCommand(cmd.Cmd):
     """ class cmd processor, inherit cmd module """
 
+    prompt = "(hbnb) "
+
     def emptyline(self):
         """does nothing when empty line/ newline characte"""
         pass
@@ -85,6 +87,8 @@ class HBNBCommand(cmd.Cmd):
                         foundclass = True
                     if (x[1] == line_tok[1]):
                         foundid = True
+                    if (foundid is True and foundclass is True):
+                        break
                 if (foundclass is True and foundid is True):
                     print(objs[".".join(line_tok)])
                 elif (foundclass is True and foundid is False):
@@ -144,6 +148,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, line):
         """ print all instance of objects from provided class"""
+
         #load objects
         #split key with .
         #compare split with line is == print value
@@ -163,13 +168,15 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
 
                
-    def do_update(self, line):
+    def do_update(self, line, dic={}):
         """update instance attributes already create"""
         #load values from file
         #join args with . 
         #compare keys with joined args
         #if === seach deeper, to 
         storage.reload()#rload created objects
+        if (len(dic) == 0):
+            print("*************8")
         if (len(line) == 0):
             print("** class name missing **")
         else:
@@ -205,13 +212,18 @@ class HBNBCommand(cmd.Cmd):
     def default(self, line):
         parts = line.split(".")
         if (len(parts) > 1):
-            parts.reverse()
-            parts[0] = parts[0][:-2]
-            method = "do_" + parts[0]
-            if hasattr(self, method):
-                methodn = getattr(self, method)
-                lis2 = parts[1:]
-                methodn(" ".join(lis2))
+            x = parts[1][:-1].replace('(', '')
+            if (x[-1] == '"'):
+                x = x[:-1]
+            x = x.replace('"', ' ')
+            x = x.split(' ')
+            cmd = parts[0]
+            if (len(x) > 1):
+                cmd = cmd + ' ' + ' '.join(x[1:])
+            func = "do_" + x[0]
+            if hasattr(self, func):
+                method = getattr(self, func)
+                method(cmd)
             else:
                 print("*** Unknown syntax: {}".format(line))
         else:
@@ -225,5 +237,8 @@ class HBNBCommand(cmd.Cmd):
             if (key.split(".")[0] == line):
                 count = count + 1
         print(count)
+
+
 if __name__ == "__main__":
+
     HBNBCommand().cmdloop()

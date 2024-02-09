@@ -7,9 +7,7 @@ except ImportError as e:
 
 
 try:
-    print("exposing base_model")
     from . import base_model
-    print("done..")
 except Exception as e:
     pass
 x = "kiptoo haron"
