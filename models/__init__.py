@@ -10,4 +10,3 @@ try:
     from . import base_model
 except Exception as e:
     pass
-x = "kiptoo haron"

@@ -3,6 +3,7 @@
 import cmd
 from models.base_model import BaseModel
 from models import storage
+import re
 from models.state import State
 from models.user import User
 from models.city import City
@@ -175,58 +176,83 @@ class HBNBCommand(cmd.Cmd):
         #compare keys with joined args
         #if === seach deeper, to 
         storage.reload()#rload created objects
-        if (len(dic) == 0):
-            print("*************8")
-        if (len(line) == 0):
-            print("** class name missing **")
+        all_objs = storage.all()#load all objects
+        if (len(dic) != 0):
+            obj_id = '.'.join(line.split(' '))
+            try:
+                all_objs[obj_id].update(dic)
+            except KeyError as e:
+                pass
+            storage.save()
         else:
-            line_tok = line.split(" ")
-            all_objs = storage.all()#load all objects
-            if (len(line_tok) == 1):
-                for key in all_objs:
-                    foundclass = False
-                    if (key.split(".")[0] == line_tok[0]):
-                        foundclass = True
-                        break
-                if (foundclass):
-                    print("** instance id missing **")
-                else:
-                    print("** class doesn't exist **")
-            elif (len(line_tok) == 2):
-                keyfound = False
-                for key in all_objs:
-                    if (key.split(".")[1] == line_tok[1]):
-                        keyfound = True
-                        break
-                if(keyfound):
-                    print("** attribute name missing **")
-                else:
-                    print("** no instance found **")
-            elif (len(line_tok) == 3):
-                print("** value missing **")
+            if (len(line) == 0):
+                print("** class name missing **")
             else:
-                all_objs[line_tok[0] + "." + line_tok[1]][line_tok[2]] = line_tok[3]
-                storage.objects = all_objs
-                storage.save() 
+                line_tok = line.split(" ")
+                if (len(line_tok) == 1):
+                    for key in all_objs:
+                        foundclass = False
+                        if (key.split(".")[0] == line_tok[0]):
+                            foundclass = True
+                            break
+                    if (foundclass):
+                        print("** instance id missing **")
+                    else:
+                        print("** class doesn't exist **")
+                elif (len(line_tok) == 2):
+                    keyfound = False
+                    for key in all_objs:
+                        if (key.split(".")[1] == line_tok[1]):
+                            keyfound = True
+                            break
+                    if(keyfound):
+                        print("** attribute name missing **")
+                    else:
+                        print("** no instance found **")
+                elif (len(line_tok) == 3):
+                    print("** value missing **")
+                else:
+                    all_objs[line_tok[0] + "." + line_tok[1]][line_tok[2]] = line_tok[3]
+                    storage.objects = all_objs
+                    storage.save() 
 
+    def __parse_for_cmd(self, line):
+
+        line = re.search(r'[^{]*', line)[0]
+        line = line.replace('(', '').replace('"', ' ')\
+        .replace(',', ' ').replace('.', ' ').replace(')', '')
+        line = line.split(' ')
+        line[0], line[1] = line[1], line[0]
+
+        lines = []
+        for i in range(len(line)):
+            if (len(line[i]) > 0):
+                lines.append(line[i].replace(' ', ''))
+        del line
+        return lines
+ 
     def default(self, line):
-        parts = line.split(".")
-        if (len(parts) > 1):
-            x = parts[1][:-1].replace('(', '')
-            if (x[-1] == '"'):
-                x = x[:-1]
-            x = x.replace('"', ' ')
-            x = x.split(' ')
-            cmd = parts[0]
-            if (len(x) > 1):
-                cmd = cmd + ' ' + ' '.join(x[1:])
-            func = "do_" + x[0]
-            if hasattr(self, func):
-                method = getattr(self, func)
-                method(cmd)
+
+        if (len(line.split(".")) > 1):
+            dic = None
+            dic_present = re.search(r'\{[^}]*}', line)
+            if (dic_present):
+                dic = eval(dic_present[0])
+                line = self.__parse_for_cmd(line)
+            else:
+                line = self.__parse_for_cmd(line)
+
+            if hasattr(self, "do_" + line[0]):
+                method = getattr(self, "do_" + line[0])
+                args = ' '.join(line[1:])
+                if (dic):
+                    method(args, dic)
+                else:
+                    method(args)
             else:
                 print("*** Unknown syntax: {}".format(line))
         else:
+            pass
             super().default(line)
 
     def do_count(self, line):

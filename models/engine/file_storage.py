@@ -32,7 +32,6 @@ class FileStorage:
     def save(self):
         """serializes objects to  file"""
 
-        print(self.__objects)
         with open(self.__file_path, "w") as file:
            json.dump(self.__objects, file)
 
