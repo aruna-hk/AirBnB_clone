@@ -12,11 +12,11 @@ from models.place import Place
 from models.review import Review
 import sys
 
+
 class HBNBCommand(cmd.Cmd):
     """ class cmd processor, inherit cmd module """
 
     prompt = "(hbnb) "
-
 
     def emptyline(self):
         """does nothing when empty line/ newline characte"""
@@ -36,7 +36,7 @@ class HBNBCommand(cmd.Cmd):
 
         if (len(line) == 0):
             print("** class name missing **")
-        else: 
+        else:
             try:
                 x = getattr(sys.modules[__name__], line)
                 newobj = x()
@@ -47,9 +47,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, line):
         """print created objects bof class  passes as argument """
-        #load arguments
-        #split key with .
-        #check if first token == line printif
+
         if (len(line) == 0):
             print("** class name missing **")
         else:
@@ -76,63 +74,38 @@ class HBNBCommand(cmd.Cmd):
                 elif (foundclass is False):
                     print("** class doesn't exist **")
 
-
     def do_destroy(self, line):
         """ delete object created base on its id and class creaed from
             delete from file"""
-        #split line wit rspect to "space"
-        #join line with . === key
-        #load objects from a file
-        #compare keys with key if equal remove from dict
-        #save to file
+
         x = line.split(" ")
         storage.reload()
         if (len(line) == 0):
             print("** class name missing **")
         else:
-            x = line.split(" ")
-            objs = storage.all()#objects reloaded
-            if (len(x) == 1):
-                cls = False
-                for key in objs:
-                    if (key.split(".")[0] == x[0]):
-                        cls = True
-                if cls:
-                    print("** instance id missing **")
-                else:
-                    print("** class doesn't exist **")
-                del objs
-            elif (len(x) >= 2):
-                for key in objs:#search for x , key to remove
-                    keypair = key.split(".")
-                    clsflag = False
-                    idflag = False
-
-                    if (keypair[0] == x[0]):
-                        clsflag = True
-                    if (keypair[1] == x[1]):
-                        idflag = True
-                    if (clsflag is True and idflag is True):
+            objs = storage.all()
+            remove_key = ".".join(x)
+            removed_key = False
+            if (hasattr(sys.modules[__name__], x[0]) and len(x) == 1):
+                print("** instance id missing **")
+            elif (hasattr(sys.modules[__name__], x[0]) and len(x) > 1):
+                for key, value in objs.items():
+                    class_name = key.split('.')
+                    if (key == remove_key):
+                        removed_key = True
+                        del objs[remove_key]
+                        storage.objects(objs)
+                        storage.save()
                         break
-
-                if (idflag is True and clsflag is True):
-                    val = objs.pop(".".join(x))
-                    del val
-                    storage.objects = objs
-                    storage.save()
-                elif (idflag is False and clsflag is True):
+                if (removed_key is False):
                     print("** no instance found **")
-                elif (clsflag is False):
-                    print("** class doesn't exist **")
-
+            else:
+                print("** class doesn't exist **")
 
     def do_all(self, line):
         """ print all instance of objects from provided class"""
 
-        #load objects
-        #split key with .
-        #compare split with line is == print value
-        storage.reload()#reload objects
+        storage.reload()
         obj = storage.all()
         if (len(line) == 0):
             for key, value in obj.items():
@@ -147,21 +120,22 @@ class HBNBCommand(cmd.Cmd):
             if (foundclass is False):
                 print("** class doesn't exist **")
 
-               
     def do_update(self, line, dic={}):
         """update instance attributes already create"""
-        #load values from file
-        #join args with . 
-        #compare keys with joined args
-        #if === seach deeper, to 
-        storage.reload()#rload created objects
-        all_objs = storage.all()#load all objects
+
+        storage.reload()
+        all_objs = storage.all()
         if (len(dic) != 0):
-            obj_id = '.'.join(line.split(' '))
             try:
-                all_objs[obj_id].update(dic)
-            except KeyError as e:
-                pass
+                obj_id = '.'.join(line.split(' '))
+                obj = all_objs[obj_id].to_dict()
+                obj.update(dic)
+                new_obj = getattr(sys.modules[__name__], obj["__class__"])
+                all_objs[obj_id] = new_obj(**obj)
+                storage.objects(all_objs)
+                storage.save()
+            except Exception as e:
+                print("** no instance found **")
             storage.save()
         else:
             if (len(line) == 0):
@@ -191,15 +165,21 @@ class HBNBCommand(cmd.Cmd):
                 elif (len(line_tok) == 3):
                     print("** value missing **")
                 else:
-                    all_objs[line_tok[0] + "." + line_tok[1]][line_tok[2]] = line_tok[3]
-                    storage.objects = all_objs
-                    storage.save() 
+                    key = line_tok[0] + "." + line_tok[1]
+                    attr_dict = all_objs[key].to_dict()
+                    attr_dict[line_tok[2]] = line_tok[3]
+                    mod_name = sys.modules[__name__]
+                    cls = getattr(mod_name, attr_dict["__class__"])
+                    obj = cls(**attr_dict)
+                    all_objs[key] = obj
+                    storage.objects(all_objs)
+                    storage.save()
 
     def __parse_for_cmd(self, line):
 
         line = re.search(r'[^{]*', line)[0]
         line = line.replace('(', '').replace('"', ' ')\
-        .replace(',', ' ').replace('.', ' ').replace(')', '')
+            .replace(',', ' ').replace('.', ' ').replace(')', '')
         line = line.split(' ')
         line[0], line[1] = line[1], line[0]
 
@@ -209,7 +189,7 @@ class HBNBCommand(cmd.Cmd):
                 lines.append(line[i].replace(' ', ''))
         del line
         return lines
- 
+
     def default(self, line):
 
         if (len(line.split(".")) > 1):
