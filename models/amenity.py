@@ -6,4 +6,4 @@ from models import base_model
 class Amenity(base_model.BaseModel):
     name = None
     def __init__(self, *args, **kwargs):
-        super().__init__()
+        super().__init__(*args, **kwargs)
