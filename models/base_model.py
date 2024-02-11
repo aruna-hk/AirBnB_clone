@@ -8,11 +8,12 @@ from uuid import uuid4
 from datetime import datetime
 from models import storage
 
+
 class BaseModel:
     """ define common attributes for other classes """
 
     def __init__(self, *args, **kwargs):
-        if (len(kwargs) == 0): 
+        if (len(kwargs) == 0):
             self.id, self.created_at = str(uuid4()), datetime.now()
             self.updated_at = datetime.now()
             storage.new(self)
@@ -25,17 +26,16 @@ class BaseModel:
                 else:
                     self.__dict__[key] = value
 
-
     def __str__(self):
         """ return string repreentation of object"""
 
-        strr = "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__) 
+        strr = "[{}] ({}) {}"\
+            .format(self.__class__.__name__, self.id, self.__dict__)
         return strr
 
     def save(self):
         """modify objects file, and updated updated_at time"""
         self.updated_at = datetime.now().isoformat()
-        
         storage.save()
 
     def to_dict(self):

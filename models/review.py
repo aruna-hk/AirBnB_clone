@@ -1,8 +1,11 @@
 #!/usr/bin/python3
-
+""" models user reviews """
 from models import base_model
 
+
 class Review(base_model.BaseModel):
-    place_id = "" #string - empty string: it will be the Place.id
-    user_id = "" #string - empty string: it will be the User.id
-    text = "" # string - empty string
+    """ user review class """
+
+    place_id = ""
+    user_id = ""
+    text = ""

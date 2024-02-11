@@ -3,6 +3,7 @@
 
 from models import base_model
 
+
 class State(base_model.BaseModel):
     """create state object """
 

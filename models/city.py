@@ -3,6 +3,7 @@
 
 from models import base_model
 
+
 class City(base_model.BaseModel):
     """create state object """
     state_id = None
