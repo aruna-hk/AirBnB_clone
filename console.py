@@ -78,8 +78,8 @@ class HBNBCommand(cmd.Cmd):
         """ delete object created base on its id and class creaed from
             delete from file"""
 
-        x = line.split(" ")
         storage.reload()
+        x = line.split(" ")
         if (len(line) == 0):
             print("** class name missing **")
         else:
@@ -96,6 +96,7 @@ class HBNBCommand(cmd.Cmd):
                         del objs[remove_key]
                         storage.objects(objs)
                         storage.save()
+                        storage.reload()
                         break
                 if (removed_key is False):
                     print("** no instance found **")

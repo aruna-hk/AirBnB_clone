@@ -1,16 +1,12 @@
 #!/usr/bin/python3
 
 import unittest
+from models.base_model import BaseModel
 
 class TestBaseModel(unittest.TestCase):
-    def setUp(self):
-        from models import base_model
-        self.BaseModel = base_model.BaseModel
-        self.my_model1 = self.BaseModel()
 
-    def tearDown(self):
-        del self.my_model1
-        del self.BaseModel
+    def setUP(self):
+        self.model1 = BaseModel()
 
     def test_object_created(self):
         self.assertTrue(isinstance(self.my_model1, self.BaseModel), True)
