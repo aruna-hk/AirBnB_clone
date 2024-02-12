@@ -1,24 +1,24 @@
 #!/usr/bin/python3
-""" test basemodel module """
+""" test place model module """
 
 import unittest
 import os
 import json
 from models.base_model import BaseModel
+from models.place import Place
 
 
-class TestBaseModel(unittest.TestCase):
-    """test base_mode class"""
+class Testplacemodel(unittest.TestCase):
+    """ test base model class"""
 
     def setUp(self):
-        """creat base model object to test"""
-
-        self.model1 = BaseModel()
+        """set up place object to test"""
+        self.place = Place()
 
     def test_base_object(self):
         """test object creat is instance of basemodel"""
-        self.assertTrue(isinstance(self.model1, BaseModel), True)
-        dic_obj = self.model1.to_dict()
+        self.assertTrue(isinstance(self.place, Place), True)
+        dic_obj = self.place.to_dict()
         self.assertTrue(isinstance(dic_obj, dict))
 
 

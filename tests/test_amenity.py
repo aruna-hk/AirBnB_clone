@@ -5,20 +5,21 @@ import unittest
 import os
 import json
 from models.base_model import BaseModel
+from models.amenity import Amenity
 
 
-class TestBaseModel(unittest.TestCase):
-    """test base_mode class"""
+class TestAmenityModel(unittest.TestCase):
+    """test amenity model"""
 
     def setUp(self):
-        """creat base model object to test"""
+        """ init amenity object to test """
 
-        self.model1 = BaseModel()
+        self.amenity = Amenity()
 
     def test_base_object(self):
         """test object creat is instance of basemodel"""
-        self.assertTrue(isinstance(self.model1, BaseModel), True)
-        dic_obj = self.model1.to_dict()
+        self.assertTrue(isinstance(self.amenity, Amenity), True)
+        dic_obj = self.amenity.to_dict()
         self.assertTrue(isinstance(dic_obj, dict))
 
 

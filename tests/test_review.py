@@ -1,24 +1,25 @@
 #!/usr/bin/python3
-""" test basemodel module """
+""" test reviw module """
 
 import unittest
 import os
 import json
 from models.base_model import BaseModel
+from models.review import Review
 
 
-class TestBaseModel(unittest.TestCase):
-    """test base_mode class"""
+class Testreview(unittest.TestCase):
+    """ test review class"""
 
     def setUp(self):
-        """creat base model object to test"""
+        """ startup init review to test """
 
-        self.model1 = BaseModel()
+        self.review = Review()
 
     def test_base_object(self):
         """test object creat is instance of basemodel"""
-        self.assertTrue(isinstance(self.model1, BaseModel), True)
-        dic_obj = self.model1.to_dict()
+        self.assertTrue(isinstance(self.review, Review), True)
+        dic_obj = self.review.to_dict()
         self.assertTrue(isinstance(dic_obj, dict))
 
 
