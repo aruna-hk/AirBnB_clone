@@ -6,7 +6,7 @@
 """
 from uuid import uuid4
 from datetime import datetime
-#from models import storage
+from models import storage
 
 
 class BaseModel:
@@ -40,7 +40,7 @@ class BaseModel:
         """modify objects file, and updated updated_at time"""
 
         self.updated_at = datetime.now()
-        models.storage.save()
+        storage.save()
 
     def to_dict(self):
         """ bundle objects attributes in a dictionary including class name"""
