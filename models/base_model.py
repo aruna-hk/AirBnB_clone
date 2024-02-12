@@ -26,7 +26,7 @@ class BaseModel:
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
-            storage.new(self)
+            models.storage.new(self)
 
 
     def __str__(self):
@@ -40,7 +40,7 @@ class BaseModel:
         """modify objects file, and updated updated_at time"""
 
         self.updated_at = datetime.now()
-        storage.save()
+        models.storage.save()
 
     def to_dict(self):
         """ bundle objects attributes in a dictionary including class name"""
