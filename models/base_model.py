@@ -40,9 +40,7 @@ class BaseModel:
         """modify objects file, and updated updated_at time"""
 
         self.updated_at = datetime.now()
-        storage.new(self)
         storage.save()
-        return self
 
     def to_dict(self):
         """ bundle objects attributes in a dictionary including class name"""
