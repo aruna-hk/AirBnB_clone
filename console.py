@@ -34,6 +34,7 @@ class HBNBCommand(cmd.Cmd):
     def do_creat(self, line):
         """ create object of provided class """
 
+        storage.reload()
         if (len(line) == 0):
             print("** class name missing **")
         else:
@@ -50,29 +51,24 @@ class HBNBCommand(cmd.Cmd):
 
         if (len(line) == 0):
             print("** class name missing **")
-        else:
+        elif (hasattr(sys.modules[__name__], line.split(' ')[0])):
             storage.reload()
             objs = storage.all()
-            line_tok = line.split(" ")
+            line_tok = line.split(' ')
             if (len(line_tok) != 2):
                 print("** instance id missing **")
             else:
-                foundclass = False
-                foundid = False
+                found = False
+                kk = '.'.join(line_tok)
                 for obj in objs:
-                    x = obj.split(".")
-                    if (x[0] == line_tok[0]):
-                        foundclass = True
-                    if (x[1] == line_tok[1]):
-                        foundid = True
-                    if (foundid is True and foundclass is True):
-                        break
-                if (foundclass is True and foundid is True):
+                    if (obj == kk):
+                        found = True
+                if (found):
                     print(objs[".".join(line_tok)])
-                elif (foundclass is True and foundid is False):
+                else:
                     print("** no instance found **")
-                elif (foundclass is False):
-                    print("** class doesn't exist **")
+        else:
+            print("** class doesn't exist **")
 
     def do_destroy(self, line):
         """ delete object created base on its id and class creaed from
@@ -85,20 +81,14 @@ class HBNBCommand(cmd.Cmd):
         else:
             objs = storage.all()
             remove_key = ".".join(x)
-            removed_key = False
             if (hasattr(sys.modules[__name__], x[0]) and len(x) == 1):
                 print("** instance id missing **")
             elif (hasattr(sys.modules[__name__], x[0]) and len(x) > 1):
-                for key, value in objs.items():
-                    class_name = key.split('.')
-                    if (key == remove_key):
-                        removed_key = True
-                        del objs[remove_key]
-                        storage.objects(objs)
-                        storage.save()
-                        storage.reload()
-                        break
-                if (removed_key is False):
+                try:
+                    del objs[remove_key]
+                    storage.objects(objs)
+                    storage.save()
+                except KeyError as e:
                     print("** no instance found **")
             else:
                 print("** class doesn't exist **")
@@ -111,15 +101,13 @@ class HBNBCommand(cmd.Cmd):
         if (len(line) == 0):
             for key, value in obj.items():
                 print(value)
-        else:
-            foundclass = False
+        elif (hasattr(sys.modules[__name__], line.split(' ')[0])):
             for key, value in obj.items():
                 x = key.split(".")[0]
-                if (x == line):
-                    foundclass = True
+                if (x == line.split(' ')[0]):
                     print(value)
-            if (foundclass is False):
-                print("** class doesn't exist **")
+        else:
+            print("** class doesn't exist **")
 
     def do_update(self, line, dic={}):
         """update instance attributes already create"""
@@ -174,7 +162,7 @@ class HBNBCommand(cmd.Cmd):
                     obj = cls(**attr_dict)
                     all_objs[key] = obj
                     storage.objects(all_objs)
-                    storage.save()
+                    obj.save()
 
     def __parse_for_cmd(self, line):
 

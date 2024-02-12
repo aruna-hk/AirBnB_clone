@@ -15,7 +15,6 @@ class FileStorage:
 
     __file_path = "file.json"
     __objects = {}
-    __base = None
 
     @staticmethod
     def file_path(file_path="file.json"):
@@ -26,7 +25,8 @@ class FileStorage:
         """ sets private variable objects"""
 
         for key, value in objects.items():
-            objects[key] = value.to_dict()
+            objects[key] = objects[key].to_dict()
+
         self.__objects = objects
 
     def all(self):
