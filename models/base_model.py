@@ -18,7 +18,7 @@ class BaseModel:
                 if (key == "__class__"):
                     continue
                 if 'created_at' == key or 'updated_at' == key:
-                    self.__dict__[key] = datetime.strptime(value,'%Y-%m-%dT%H:%M:%S.%f')
+                    self.__dict__[key] = value.isoformat()
 
                 else:
                     self.__dict__[key] = value
@@ -27,7 +27,6 @@ class BaseModel:
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
             storage.new(self)
-
 
     def __str__(self):
         """ return string repreentation of object"""
