@@ -19,7 +19,7 @@ class BaseModel:
                     continue
                 if 'created_at' == key or 'updated_at' == key:
                     v = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
-                    self.__dict[key] = v
+                    self.__dict__[key] = v
                 else:
                     self.__dict__[key] = value
         else:
