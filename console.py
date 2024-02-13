@@ -19,11 +19,14 @@ class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
 
     def emptyline(self):
-        """does nothing when empty line/ newline characte"""
+        """does nothing when empty line
+            does nothing when newline character is entered"""
+
         pass
 
     def do_EOF(self, line):
         """ handles end of file -ctrl D - quit"""
+
         return True
 
     def do_quit(self, line):
@@ -47,7 +50,7 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
 
     def do_show(self, line):
-        """print created objects bof class  passes as argument """
+        """print created objects of class  passes as argument """
 
         if (len(line) == 0):
             print("** class name missing **")
@@ -110,7 +113,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_update(self, line, dic={}):
-        """update instance attributes already create"""
+        """update instance attributes already createD"""
 
         storage.reload()
         all_objs = storage.all()
@@ -129,45 +132,34 @@ class HBNBCommand(cmd.Cmd):
         else:
             if (len(line) == 0):
                 print("** class name missing **")
-            else:
+            elif (hasattr(sys.modules[__name__], line.split(' ')[0])):
                 line_tok = line.split(" ")
                 if (len(line_tok) == 1):
-                    for key in all_objs:
-                        foundclass = False
-                        if (key.split(".")[0] == line_tok[0]):
-                            foundclass = True
-                            break
-                    if (foundclass):
-                        print("** instance id missing **")
-                    else:
-                        print("** class doesn't exist **")
+                    print("** instance id missing **")
                 elif (len(line_tok) == 2):
-                    keyfound = False
-                    for key in all_objs:
-                        if (key.split(".")[1] == line_tok[1]):
-                            keyfound = True
-                            break
-                    if(keyfound):
-                        print("** attribute name missing **")
-                    else:
-                        print("** no instance found **")
+                    print("** attribute name missing **")
                 elif (len(line_tok) == 3):
                     print("** value missing **")
                 else:
+                    value = ' '.join(line_tok[3:])
                     key = line_tok[0] + "." + line_tok[1]
                     attr_dict = all_objs[key].to_dict()
-                    attr_dict[line_tok[2]] = line_tok[3]
+                    attr_dict[line_tok[2]] = value.replace('"', '')
                     mod_name = sys.modules[__name__]
                     cls = getattr(mod_name, attr_dict["__class__"])
                     obj = cls(**attr_dict)
                     all_objs[key] = obj
                     storage.objects(all_objs)
                     obj.save()
+            else:
+                print("**class doesn't exist ***")
 
     def __parse_for_cmd(self, line):
+        """ helper function to format string to be passed to
+            command processors"""
 
         line = re.search(r'[^{]*', line)[0]
-        line = line.replace('(', '').replace('"', ' ')\
+        line = line.replace('(', '').replace('"', ' ').replace('\'', ' ')\
             .replace(',', ' ').replace('.', ' ').replace(')', '')
         line = line.split(' ')
         line[0], line[1] = line[1], line[0]
@@ -180,7 +172,9 @@ class HBNBCommand(cmd.Cmd):
         return lines
 
     def default(self, line):
-
+        """hijack deault processing of lines such to handle
+            <class>.<comman>()
+         """
         if (len(line.split(".")) > 1):
             dic = None
             dic_present = re.search(r'\{[^}]*}', line)
@@ -204,15 +198,24 @@ class HBNBCommand(cmd.Cmd):
             super().default(line)
 
     def do_count(self, line):
+        """count created objects all obj is no arguments
+            or count specific class objects """
+
         storage.reload()
         obj = storage.all()
-        count = 0
-        for key in obj:
-            if (key.split(".")[0] == line):
-                count = count + 1
-        print(count)
+        if (len(line) == 0):
+            print(len(obj))
+        elif (hasattr(sys.modules[__name__], line.split(' ')[0])):
+            count = 0
+            for key in obj:
+                if (key.split(".")[0] == line):
+                    count = count + 1
+            print(count)
+        else:
+            print("** class doesn't exist **")
 
 
 if __name__ == "__main__":
+    """ execute console if not imported """
 
     HBNBCommand().cmdloop()
