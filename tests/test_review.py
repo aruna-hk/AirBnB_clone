@@ -1,0 +1,64 @@
+#!/usr/bin/python3
+""" test review module"""
+
+import unittest
+from models.review import Review
+from datetime import datetime
+
+
+class TestReview(unittest.TestCase):
+    """test review class """
+
+    def setUp(self):
+        """set up creation of review object """
+
+        self.review = Review()
+
+    def test_Review_created(self):
+        """ test object is instance of base_model"""
+
+        self.assertTrue(isinstance(self.review, Review), True)
+
+    def test_time_instance(self):
+        """ test updated at and created at are instance of time"""
+
+        self.assertTrue(isinstance(self.review.updated_at, datetime))
+        self.assertTrue(isinstance(self.review.created_at, datetime))
+
+    def test_id_is_str(self):
+        """test obj id is str of len 36"""
+
+        self.assertTrue(isinstance(self.review.id, str))
+        self.assertEqual(len(self.review.id), 36)
+
+    def test_to_dict(self):
+        """ check to_dict function"""
+
+        object_dict = self.review.to_dict()
+        self.assertTrue(isinstance(object_dict, dict))
+
+    def test_dynamic_update(self):
+        """test dynamic update"""
+
+        self.review.name = "kiptoo haron"
+
+        self.assertTrue("name" in self.review.to_dict())
+
+    def test_object_from_same_class_unequal(self):
+        """test obj == obj2"""
+
+        obj2 = Review()
+
+        self.assertFalse(obj2 == self.review)
+
+    def test_review_reconstruction(self):
+        """ reconstructing object with dictionary """
+
+        obj_dict = self.review.to_dict()
+
+        recreat = Review(**obj_dict)
+        self.assertTrue(isinstance(recreat, Review))
+
+
+if __name__ == "__main__":
+    unittest.main()

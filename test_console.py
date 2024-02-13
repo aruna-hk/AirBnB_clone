@@ -37,10 +37,8 @@ class TestConsole(unittest.TestCase):
     def setUp(self):
         """ import console from consol """
         self.console = console.HBNBCommand
-        try:
-            os.remove("file.json")
-        except FileNotFoundError:
-            pass
+        with open("file.json", "w") as file:
+            json.dump({}, file)
 
     def test_user_creat_update_destroy_count(self):
         """ object creation takes two forms
