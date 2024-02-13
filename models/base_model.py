@@ -18,8 +18,8 @@ class BaseModel:
                 if (key == "__class__"):
                     continue
                 if 'created_at' == key or 'updated_at' == key:
-                    self.__dict__[key] = value.isoformat()
-
+                    v = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
+                    self.__dict[key] = v
                 else:
                     self.__dict__[key] = value
         else:
