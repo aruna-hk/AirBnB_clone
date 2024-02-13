@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-""" console application module entry of the program """
+""" console application module entry of the program
+    accept commands, process the commands ad pass the hand over
+    command to command handler """
+
 import cmd
 from models.base_model import BaseModel
 from models import storage
