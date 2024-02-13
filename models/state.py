@@ -7,7 +7,9 @@ from models import base_model
 class State(base_model.BaseModel):
     """create state object """
 
-    name = None
+    name = ''
 
     def __init__(self, *args, **kwargs):
+        """ location , State initializer"""
+
         super().__init__(*args, **kwargs)

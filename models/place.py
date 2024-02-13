@@ -4,14 +4,15 @@ from models import base_model
 
 
 class Place(base_model.BaseModel):
-    """ create a place object """
+    """ create a place object
+    """
 
-    city_id = None
-    user_id = None
-    name = None
-    description = None
-    number_rooms = None
-    number_bathrooms = None
+    city_id = ''
+    user_id = ''
+    name = ''
+    description = ''
+    number_rooms = 0
+    number_bathrooms = 0
     max_guest = 0
     price_by_night = 0
     latitude = 0
@@ -19,4 +20,6 @@ class Place(base_model.BaseModel):
     amenity_ids = []
 
     def __init__(self, *args, **kwargs):
+        """ place model init method """
+
         super().__init__(*args, **kwargs)

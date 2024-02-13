@@ -6,8 +6,8 @@ from models import base_model
 
 class City(base_model.BaseModel):
     """create state object """
-    state_id = None
-    name = None
+    state_id = ''
+    name = ''
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
