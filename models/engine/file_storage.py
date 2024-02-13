@@ -1,25 +1,21 @@
 #!/usr/bin/python3
-""" storage engine module"""
+""" storage engine moddules
+    serializes and deserialzes objects using json
+"""
 
 
 import inspect
 import json
-try:
-    from . import base_model
-except Exception as e:
-    pass
+import sys
 
 
 class FileStorage:
-    """ serialization and deserializtion class """
+    """ serialization and deserializtion class
+        to json and from json file
+    """
 
     __file_path = "file.json"
     __objects = {}
-
-    @staticmethod
-    def file_path(file_path="file.json"):
-        """ sets file to store json representtion of objects """
-        FileStorage.__file_path = file_path
 
     def objects(self, objects):
         """ sets private variable objects"""
@@ -33,22 +29,27 @@ class FileStorage:
         """ all objects getter as python objects """
 
         recreated_objects = {}
-        caller_module = inspect.getmodule(inspect.stack()[1][0])
-        if caller_module:
-            for key, value in self.__objects.items():
-                class_name = value["__class__"]
-                model = getattr(caller_module, class_name)
-                recreated_objects[key] = model(**value)
+        for key, value in self.__objects.items():
+            cls = value["__class__"]
+            if (cls == "BaseModel"):
+                model = sys.modules['models.base_model'].BaseModel
+            else:
+                mod = sys.modules['models.{}'.format(cls.lower())]
+                model = getattr(mod, cls)
+            recreated_objects[key] = model(**value)
         return recreated_objects
 
     def save(self):
-        """serializes objects to  file"""
+        """save json representation of python objects
+           in a file
+        """
 
         with open(self.__file_path, "w") as file:
             json.dump(self.__objects, file)
 
     def reload(self):
         """deserializes json object t pyobj form file"""
+
         try:
             file = open(self.__file_path, "r")
             self.__objects = json.load(file)
