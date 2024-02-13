@@ -22,9 +22,9 @@ do:
         to be created to console file because it uses hasattr(current-module, <attribute_name>) to create objects
         
         creating objects can take two  forms
-            $creat <object> ie creat User
-            or
-            #<object>.creat() i.e  $User.creat()
+        $creat <object> ie creat User
+        or
+        #<object>.creat() i.e  $User.creat()
 
    console application  also support the following command
 
@@ -46,14 +46,15 @@ do:
    other commands include count and show
 
    example 
-   - $ git clone https://github.com/aruna-hk/AirBnB_clone.git
-     $ cd AirBnB_clone
-     $ ./console.py
-     (hbnb) creat User
-      <some output id of instance created>
-     (hbnb) User.creat()
-      <some output id of instance created>
-     $
+   - 
+        git clone https://github.com/aruna-hk/AirBnB_clone.git
+        cd AirBnB_clone
+        ./console.py
+        (hbnb) creat User
+        <some output id of instance created>
+        (hbnb) User.creat()
+        <some output id of instance created>
+
    thats just example to create user
    objects created are stored in file name "file.json"
    to hange the output file cd models/engine and edit "file_storage.py" file
