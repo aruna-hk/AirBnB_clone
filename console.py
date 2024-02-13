@@ -183,13 +183,13 @@ class HBNBCommand(cmd.Cmd):
             dic_present = re.search(r'\{[^}]*}', line)
             if (dic_present):
                 dic = eval(dic_present[0])
-                line = self.__parse_for_cmd(line)
+                lin = self.__parse_for_cmd(line)
             else:
-                line = self.__parse_for_cmd(line)
+                lin = self.__parse_for_cmd(line)
 
-            if hasattr(self, "do_" + line[0]):
-                method = getattr(self, "do_" + line[0])
-                args = ' '.join(line[1:])
+            if hasattr(self, "do_" + lin[0]):
+                method = getattr(self, "do_" + lin[0])
+                args = ' '.join(lin[1:])
                 if (dic):
                     method(args, dic)
                 else:
