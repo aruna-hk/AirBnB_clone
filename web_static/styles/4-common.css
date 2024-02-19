@@ -1,0 +1,19 @@
+body {
+	margin: 0;
+	border: 0;
+}
+head {
+	<link rel="icon" href="images/icon.png">
+}
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	color: #484848;
+	font-size:14px;
+	font-family:Circular,"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+.container {
+        max-width: 1000px;
+	margin : 30px auto;
+}
